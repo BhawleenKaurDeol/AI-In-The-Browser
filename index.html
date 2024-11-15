@@ -1,6 +1,6 @@
-<html>
-  <head>
-    <style>
+<!-- <html>
+  <head> -->
+    <!-- <style>
       #results {
 	  position: fixed;
 	  top: 50px;
@@ -29,45 +29,45 @@
 	  top: 0;
 	  left: 0;
       }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"> </script>
-    <!-- Load the coco-ssd model. -->
+    </style> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"> </script> -->
+    <!-- Load the coco-ssd model. 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"> </script>
   </head>
   <body>
-    <!-- Basic Cloud Vision (Google) Demo -->
+     Basic Cloud Vision (Google) Demo -->
 
-    <video autoplay="true" id="videoElement"></video>
+    <!-- <video autoplay="true" id="videoElement"></video>
     <button id="vision_button">Analyze</button>
     <div id='results'></div>
     
 
-    <script>
+    <script> -->
 
-      // Access camera 
-      var video = document.querySelector("#videoElement");      
-      if (navigator.mediaDevices.getUserMedia) {       
-	  navigator.mediaDevices.getUserMedia({video: true})
-	      .then(function(stream) {
-		  video.srcObject = stream;
-	      })
-	      .catch(function(err) {
-		  console.log("Something went wrong!");
-	      });
-      }
+    //   // Access camera 
+    //   var video = document.querySelector("#videoElement");      
+    //   if (navigator.mediaDevices.getUserMedia) {       
+	//   navigator.mediaDevices.getUserMedia({video: true})
+	//       .then(function(stream) {
+	// 	  video.srcObject = stream;
+	//       })
+	//       .catch(function(err) {
+	// 	  console.log("Something went wrong!");
+	//       });
+    //   }
 
-      // We only get to work when the vision button is clicked
-      document.querySelector("#vision_button").addEventListener('click', evt => {
-	  // extract image as base64, scale it down to reduce data transfer speed	  
-	  var scale = 0.25;
-	  var canvas = document.createElement("canvas");
-          canvas.width = video.videoWidth * scale;
-          canvas.height = video.videoHeight * scale;
-          canvas.getContext('2d')
-              .drawImage(video, 0, 0, canvas.width, canvas.height);
+    //   // We only get to work when the vision button is clicked
+    //   document.querySelector("#vision_button").addEventListener('click', evt => {
+	//   // extract image as base64, scale it down to reduce data transfer speed	  
+	//   var scale = 0.25;
+	//   var canvas = document.createElement("canvas");
+    //       canvas.width = video.videoWidth * scale;
+    //       canvas.height = video.videoHeight * scale;
+    //       canvas.getContext('2d')
+    //           .drawImage(video, 0, 0, canvas.width, canvas.height);
 
-	  // dataUrl contains base64 version of image
-          var dataUrl = canvas.toDataURL();
+	//   // dataUrl contains base64 version of image
+    //       var dataUrl = canvas.toDataURL();
 
 	  // Send image to google to analyze
 	  // Documentation of the annotate feature: https://cloud.google.com/vision/docs/reference/rest/v1/images/annotate 
@@ -112,29 +112,114 @@
 	//   });
 
 
-  // Load the model.
-  cocoSsd.load().then(model => {
-    // detect objects in the image.
-    model.detect(dataUrl).then(predictions => {
-      console.log('Predictions: ', predictions);
-    });
-  });
+//   // Load the model.
+//   cocoSsd.load().then(model => {
+//     // detect objects in the image.
+//     model.detect(dataUrl).then(predictions => {
+//       console.log('Predictions: ', predictions);
+//     });
+//   });
 
-  results.innerHTML = '';
-  predictions.forEach(prediction => {
-		  let description = document.createElement('span');
-		  let score = document.createElement('span');
+//   results.innerHTML = '';
+//   predictions.forEach(prediction => {
+// 		  let description = document.createElement('span');
+// 		  let score = document.createElement('span');
 
-		  let div = document.createElement('div');
-		  description.innerText = annotation.description;
-		  score.innerText = annotation.score;
+// 		  let div = document.createElement('div');
+// 		  description.innerText = annotation.description;
+// 		  score.innerText = annotation.score;
 
-		  div.append(description,score);
+// 		  div.append(description,score);
 
-		  results.append(div);
-        });
-});
+// 		  results.append(div);
+//         });
+// });
       
+    <!-- </script>
+  </body>
+</html> -->
+
+
+
+<html>
+  <head>
+    <style>
+      #results {
+        position: fixed;
+        top: 50px;
+        left: 10px;
+        color: white;
+      }
+
+      #results span {
+        margin: 5px 5px;
+      }
+      
+      video {
+        position: fixed;
+        top: 0;
+        left: 0;
+      }
+
+      h1 {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+      }
+
+      button {
+        position: fixed;
+        top: 0;
+        left: 0;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"> </script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"> </script>
+  </head>
+  <body>
+    <video autoplay="true" id="videoElement"></video>
+    <button id="vision_button">Analyze</button>
+    <div id="results"></div>
+
+    <script>
+      // Access camera 
+      var video = document.querySelector("#videoElement");      
+      if (navigator.mediaDevices.getUserMedia) {       
+        navigator.mediaDevices.getUserMedia({video: true})
+          .then(function(stream) {
+            video.srcObject = stream;
+          })
+          .catch(function(err) {
+            console.log("Something went wrong!");
+          });
+      }
+
+      // Click handler for vision button
+      document.querySelector("#vision_button").addEventListener('click', evt => {
+        // Load the model
+        cocoSsd.load().then(model => {
+          // Detect objects in the video
+          model.detect(video).then(predictions => {
+            console.log('Predictions: ', predictions);
+
+            // Clear previous results
+            results.innerHTML = '';
+
+            // Display predictions
+            predictions.forEach(prediction => {
+              let description = document.createElement('span');
+              let score = document.createElement('span');
+              let div = document.createElement('div');
+
+              description.innerText = prediction.class;
+              score.innerText = prediction.score.toFixed(2);
+
+              div.append(description, score);
+              results.append(div);
+            });
+          });
+        });
+      });
     </script>
   </body>
 </html>
